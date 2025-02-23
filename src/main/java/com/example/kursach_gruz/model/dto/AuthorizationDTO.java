@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class AuthorizationDTO {
+public class AuthorizationDTO implements BaseDTO {
 
     private String email;
     private String password;

@@ -2,10 +2,7 @@ package com.example.kursach_gruz.model.entity;
 
 import com.example.kursach_gruz.model.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
@@ -13,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class User {
+public class User implements BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,4 +32,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name ="role")
     private Role role;
+
+    public User(Long id) {
+        this.userId = id;
+    }
 }

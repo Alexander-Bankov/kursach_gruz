@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RelationshipBetweenApplicationAndCargo {
+public class RelationshipBetweenApplicationAndCargo implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_relationship_betwee_application_and_cargo")

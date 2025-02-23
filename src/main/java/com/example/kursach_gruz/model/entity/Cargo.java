@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Cargo {
+public class Cargo implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

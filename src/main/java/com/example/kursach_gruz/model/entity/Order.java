@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Order {
+public class Order implements BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

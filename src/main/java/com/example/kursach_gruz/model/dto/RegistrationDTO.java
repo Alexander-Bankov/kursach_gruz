@@ -4,7 +4,7 @@ import com.example.kursach_gruz.model.entity.User;
 import lombok.Data;
 
 @Data
-public class RegistrationDTO {
+public class RegistrationDTO implements BaseDTO{
     private String fullName;
     private String email;
     private String password;
