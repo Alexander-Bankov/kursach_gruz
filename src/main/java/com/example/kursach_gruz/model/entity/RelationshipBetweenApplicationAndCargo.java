@@ -18,12 +18,10 @@ public class RelationshipBetweenApplicationAndCargo implements BaseEntity{
     @Column(name = "id_relationship_betwee_application_and_cargo")
     private Long idRelationship;
 
-    @ManyToOne
-    @JoinColumn(name = "id_application", nullable = false)
-    private Application application;
+    @Column(name = "id_application")
+    private Long applicationId;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cargo", nullable = false)
-    private Cargo cargo;
+    @JoinColumn(name = "cargo_id")
+    private Long cargoId;
 
 }

@@ -1,13 +1,14 @@
 package com.example.kursach_gruz.service.impl;
 
 import com.example.kursach_gruz.model.converter.ApplicationDTOToApplicationConverter;
-import com.example.kursach_gruz.model.converter.ApplicationToApplicationDTOConverter;
+import com.example.kursach_gruz.model.converter.ApplicationToShowApplicationDTOConverter;
 import com.example.kursach_gruz.model.dto.ApplicationDTO;
+import com.example.kursach_gruz.model.dto.showdto.ShowApplicationDTO;
 import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.User;
+import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import com.example.kursach_gruz.model.repository.ApplicationRepository;
 import com.example.kursach_gruz.model.repository.UserRepository;
-import com.example.kursach_gruz.service.BaseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
@@ -15,21 +16,23 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ApplicationService implements BaseService<ApplicationDTO, Long> {
+public class ApplicationService /*implements BaseService<ApplicationDTO, Long>*/ {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
-    private final ApplicationToApplicationDTOConverter applicationToApplicationDTOConverter;
+    private final ApplicationToShowApplicationDTOConverter applicationToShowApplicationDTOConverter;
     private final ApplicationDTOToApplicationConverter applicationDTOToApplicationConverter;
 
-    public ApplicationService(ApplicationRepository applicationRepository, UserRepository userRepository) {
+    public ApplicationService(ApplicationRepository applicationRepository, UserRepository userRepository,
+                              ApplicationToShowApplicationDTOConverter applicationToShowApplicationDTOConverter,
+                              ApplicationDTOToApplicationConverter applicationDTOToApplicationConverter) {
         this.applicationRepository = applicationRepository;
         this.userRepository = userRepository;
-        this.applicationToApplicationDTOConverter = new ApplicationToApplicationDTOConverter();
-        this.applicationDTOToApplicationConverter = new ApplicationDTOToApplicationConverter();
+        this.applicationToShowApplicationDTOConverter = applicationToShowApplicationDTOConverter;
+        this.applicationDTOToApplicationConverter = applicationDTOToApplicationConverter;
     }
 
-    @Override
-    public ApplicationDTO create(ApplicationDTO dto, HttpServletRequest request) {
+    //@Override
+    public ShowApplicationDTO create(ApplicationDTO dto, HttpServletRequest request) {
         HttpSession session = request.getSession(false); // Получаем текущую сессию
         String mail = session != null ? (String) session.getAttribute("userEmail") : null; // Извлекаем email из сессии
         if (mail == null) {
@@ -41,16 +44,17 @@ public class ApplicationService implements BaseService<ApplicationDTO, Long> {
                 .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
 
         // Преобразуем DTO в сущность Application
-        Application application = applicationDTOToApplicationConverter.convert(dto,user.getUserId());
+        Application application = applicationDTOToApplicationConverter.convert(dto, user.getUserId());
         application.setUser(user); // Устанавливаем пользователя
+        application.setStatus(ApplicationStatus.CREATE); // Устанавливаем статус на CREATE
 
         // Сохраняем заявку в базе
         Application savedApplication = applicationRepository.save(application);
-        return applicationToApplicationDTOConverter.convert(savedApplication); // Возвращаем DTO с заполненным ID пользователя
+        return applicationToShowApplicationDTOConverter.convert(savedApplication); // Возвращаем DTO
     }
 
-    @Override
-    public ApplicationDTO update(Long id, ApplicationDTO dto) {
+   // @Override
+    public ShowApplicationDTO update(Long id, ApplicationDTO dto) {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Заявка не найдена"));
 
@@ -62,26 +66,26 @@ public class ApplicationService implements BaseService<ApplicationDTO, Long> {
         application.setDescription(dto.getDescription());
 
         Application updatedApplication = applicationRepository.save(application);
-        return applicationToApplicationDTOConverter.convert(updatedApplication);
+        return applicationToShowApplicationDTOConverter.convert(updatedApplication);
     }
 
-    @Override
+    //@Override
     public void delete(Long id) {
         applicationRepository.deleteById(id);
     }
 
-    @Override
-    public ApplicationDTO findById(Long id) {
+    //@Override
+    public ShowApplicationDTO findById(Long id) {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Заявка не найдена"));
-        return applicationToApplicationDTOConverter.convert(application);
+        return applicationToShowApplicationDTOConverter.convert(application);
     }
 
-    @Override
-    public List<ApplicationDTO> findAll() {
+   // @Override
+    public List<ShowApplicationDTO> findAll() {
         return applicationRepository.findAll()
                 .stream()
-                .map(applicationToApplicationDTOConverter::convert)
+                .map(applicationToShowApplicationDTOConverter::convert)
                 .toList();
     }
 

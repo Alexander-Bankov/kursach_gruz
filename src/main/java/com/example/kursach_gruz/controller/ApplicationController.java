@@ -1,6 +1,7 @@
 package com.example.kursach_gruz.controller;
 
 import com.example.kursach_gruz.model.dto.ApplicationDTO;
+import com.example.kursach_gruz.model.dto.showdto.ShowApplicationDTO;
 import com.example.kursach_gruz.service.impl.ApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +19,20 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<ApplicationDTO> createApplication(@RequestBody ApplicationDTO applicationDTO, HttpServletRequest request) {
-        ApplicationDTO createdApplication = applicationService.create(applicationDTO, request);
+    public ResponseEntity<ShowApplicationDTO> createApplication(@RequestBody ApplicationDTO applicationDTO, HttpServletRequest request) {
+        ShowApplicationDTO createdApplication = applicationService.create(applicationDTO, request);
         return ResponseEntity.status(201).body(createdApplication);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApplicationDTO> getApplication(@PathVariable Long id) {
-        ApplicationDTO applicationDTO = applicationService.findById(id);
+    public ResponseEntity<ShowApplicationDTO> getApplication(@PathVariable Long id) {
+        ShowApplicationDTO applicationDTO = applicationService.findById(id);
         return ResponseEntity.ok(applicationDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApplicationDTO> updateApplication(@PathVariable Long id, @RequestBody ApplicationDTO applicationDTO) {
-        ApplicationDTO updatedApplication = applicationService.update(id, applicationDTO);
+    public ResponseEntity<ShowApplicationDTO> updateApplication(@PathVariable Long id, @RequestBody ApplicationDTO applicationDTO) {
+        ShowApplicationDTO updatedApplication = applicationService.update(id, applicationDTO);
         return ResponseEntity.ok(updatedApplication);
     }
 
@@ -42,8 +43,8 @@ public class ApplicationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ApplicationDTO>> getAllApplications() {
-        List<ApplicationDTO> applications = applicationService.findAll();
+    public ResponseEntity<List<ShowApplicationDTO>> getAllApplications() {
+        List<ShowApplicationDTO> applications = applicationService.findAll();
         return ResponseEntity.ok(applications);
     }
 }

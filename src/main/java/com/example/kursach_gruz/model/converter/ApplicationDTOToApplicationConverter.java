@@ -3,7 +3,9 @@ package com.example.kursach_gruz.model.converter;
 import com.example.kursach_gruz.model.dto.ApplicationDTO;
 import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ApplicationDTOToApplicationConverter implements DTOToEntityConverter<ApplicationDTO, Application,Long>{
     @Override
     public Application convert(ApplicationDTO dto, Long id) {

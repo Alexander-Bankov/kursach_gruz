@@ -1,5 +1,6 @@
 package com.example.kursach_gruz.model.entity;
 
+import com.example.kursach_gruz.model.enums.InvoiceStatus;
 import com.example.kursach_gruz.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,15 +32,15 @@ public class Invoice implements BaseEntity{
     @Column(name = "document")
     private String document;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private InvoiceStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user_confirmed", nullable = false)
-    private User userConfirmed;
+    @Column(name = "id_user_confirmed")
+    private Long userConfirmed;
 
     @Column(name = "cost", nullable = false)
-    private Double cost;
+    private BigDecimal cost;
 
     @Column(name = "point_of_departure")
     private String pointOfDeparture;
@@ -47,6 +49,6 @@ public class Invoice implements BaseEntity{
     private String pointOfReceipt;
 
     @ManyToOne
-    @JoinColumn(name = "id_application", nullable = false)
+    @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 }

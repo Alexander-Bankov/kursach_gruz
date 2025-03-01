@@ -1,5 +1,6 @@
 package com.example.kursach_gruz.model.entity;
 
+import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,7 +39,15 @@ public class Application implements BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ApplicationStatus status;
+
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
+
+    public Application(Long applicationId) {
+        this.idApplication = applicationId;
+    }
 }

@@ -16,7 +16,7 @@ public class Cargo implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cargo")
+    @Column(name = "cargo_id")
     private Long idCargo;
 
     @Column(name = "weight")
@@ -34,7 +34,6 @@ public class Cargo implements BaseEntity {
     @Column(name = "content")
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user", nullable = false)
-    private User user;
+    @Column(name = "id_user")
+    private Long userId;
 }

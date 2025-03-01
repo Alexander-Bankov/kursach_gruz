@@ -3,9 +3,11 @@ package com.example.kursach_gruz.model.repository;
 import com.example.kursach_gruz.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     //поиск по mail
     @Query("SELECT u FROM User u WHERE u.mail = :email")
