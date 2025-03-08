@@ -1,5 +1,6 @@
 package com.example.kursach_gruz.model.entity;
 
+import com.example.kursach_gruz.model.enums.RecordStatus;
 import com.example.kursach_gruz.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class Order implements BaseEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(name ="status")
-    private Status status;
+    private RecordStatus status;
 
     @Column(name = "id_application")
     private Long idApplication;

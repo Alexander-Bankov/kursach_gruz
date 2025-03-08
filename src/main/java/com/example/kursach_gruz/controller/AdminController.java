@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -27,9 +29,15 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-status-invoice/{id}/{status}")
-    public ResponseEntity<Void> updateStatusInvoice(@PathVariable Long id, @PathVariable InvoiceStatus status,  HttpServletRequest request) {
-        adminService.updateStatusInvoice(id, status, request);
+    @PutMapping("/confirmed-invoice/{id}")
+    public ResponseEntity<Void> updateStatusInvoice(@PathVariable Long id,HttpServletRequest request) {
+        adminService.confirmedInvoice(id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/change-cost-invoice/{id}/{cost}")
+    public ResponseEntity<Void> updateCostInvoice(@PathVariable Long id, @PathVariable BigDecimal cost, HttpServletRequest request) {
+        adminService.changeCostInvoice(id, cost, request);
         return ResponseEntity.ok().build();
     }
 }

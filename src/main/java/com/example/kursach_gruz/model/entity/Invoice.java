@@ -39,7 +39,7 @@ public class Invoice implements BaseEntity{
     @Column(name = "id_user_confirmed")
     private Long userConfirmed;
 
-    @Column(name = "cost", nullable = false)
+    @Column(name = "cost")
     private BigDecimal cost;
 
     @Column(name = "point_of_departure")
