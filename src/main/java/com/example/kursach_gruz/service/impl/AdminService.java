@@ -1,5 +1,6 @@
 package com.example.kursach_gruz.service.impl;
 
+import com.example.kursach_gruz.model.dto.showdto.UserShowDTO;
 import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.Invoice;
 import com.example.kursach_gruz.model.entity.User;
@@ -8,6 +9,7 @@ import com.example.kursach_gruz.model.enums.InvoiceStatus;
 import com.example.kursach_gruz.model.repository.ApplicationRepository;
 import com.example.kursach_gruz.model.repository.InvoiceRepository;
 import com.example.kursach_gruz.model.repository.UserRepository;
+import com.example.kursach_gruz.service.userService.AuthorizationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
@@ -25,12 +27,24 @@ public class AdminService {
 
     private final UserRepository userRepository;
 
+    private final AuthorizationService authorizationService;
+
     public AdminService(ApplicationRepository applicationRepository,
                         InvoiceRepository invoiceRepository,
-                        UserRepository userRepository) {
+                        UserRepository userRepository,
+                        AuthorizationService authorizationService) {
         this.applicationRepository = applicationRepository;
         this.invoiceRepository = invoiceRepository;
         this.userRepository = userRepository;
+        this.authorizationService = authorizationService;
+    }
+
+    public UserShowDTO getPersonalAdminInfo(HttpServletRequest req) {
+        String email = authorizationService.getCurrentUserEmail();
+
+        // Находим пользователя по email и возвращаем DTO
+        return userRepository.findUserShowDTOByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
     }
 
     @Transactional

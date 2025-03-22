@@ -7,6 +7,7 @@ import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.Invoice;
 import com.example.kursach_gruz.model.enums.InvoiceStatus;
 import com.example.kursach_gruz.model.repository.InvoiceRepository;
+import com.example.kursach_gruz.service.userService.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,14 @@ import java.util.Optional;
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final InvoiceConvertToInvoiceShowDTO convertToInvoiceShowDTO;
+    private final AuthorizationService authorizationService;
 
     public InvoiceService(InvoiceRepository invoiceRepository,
-                          InvoiceConvertToInvoiceShowDTO convertToInvoiceShowDTO) {
+                          InvoiceConvertToInvoiceShowDTO convertToInvoiceShowDTO,
+                          AuthorizationService authorizationService) {
         this.invoiceRepository = invoiceRepository;
         this.convertToInvoiceShowDTO = convertToInvoiceShowDTO;
+        this.authorizationService = authorizationService;
     }
 
     public InvoiceShowDTO createInvoice(InvoiceDTO invoiceDTO) {

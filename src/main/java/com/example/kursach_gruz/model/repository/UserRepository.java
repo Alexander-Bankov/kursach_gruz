@@ -1,5 +1,6 @@
 package com.example.kursach_gruz.model.repository;
 
+import com.example.kursach_gruz.model.dto.showdto.UserShowDTO;
 import com.example.kursach_gruz.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //поиск по mail
     @Query("SELECT u FROM User u WHERE u.mail = :email")
     Optional<User> findByEmail(String email);
+
+    @Query("SELECT new com.example.kursach_gruz.model.dto.showdto.UserShowDTO(u.fullName, u.mail, u.password, u.phone, u.role) FROM User u WHERE u.mail = :email")
+    Optional<UserShowDTO> findUserShowDTOByEmail(String email);
 
     //поиск id по mail
     @Query("SELECT u.userId FROM User u WHERE u.mail = :email")

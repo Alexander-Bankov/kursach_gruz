@@ -10,6 +10,7 @@ import com.example.kursach_gruz.model.repository.ApplicationRepository;
 import com.example.kursach_gruz.model.repository.CargoApplicationRelationshipRepository;
 import com.example.kursach_gruz.model.repository.CargoRepository;
 import com.example.kursach_gruz.model.repository.UserRepository;
+import com.example.kursach_gruz.service.userService.AuthorizationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
@@ -23,27 +24,25 @@ public class CargoService  {
     private final CargoRepository cargoRepository;
     private final ApplicationRepository applicationRepository;
     private final CargoApplicationRelationshipRepository relationshipRepository;
-
+    private final AuthorizationService authorizationService;
 
     public CargoService(
             CargoConvertToCargoDTO cargoConvertToCargoDTO,
             UserRepository userRepository,
             CargoRepository cargoRepository,
             ApplicationRepository applicationRepository,
-            CargoApplicationRelationshipRepository relationshipRepository) {
+            CargoApplicationRelationshipRepository relationshipRepository,
+            AuthorizationService authorizationService) {
         this.cargoConvertToCargoDTO = cargoConvertToCargoDTO;
         this.userRepository = userRepository;
         this.cargoRepository = cargoRepository;
         this.applicationRepository = applicationRepository;
         this.relationshipRepository = relationshipRepository;
+        this.authorizationService = authorizationService;
     }
 
     public CargoDTO create(CargoDTO dto, HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // Получаем текущую сессию
-        String mail = session != null ? (String) session.getAttribute("userEmail") : null; // Извлекаем email из сессии
-        if (mail == null) {
-            throw new IllegalStateException("Пользователь не авторизован");
-        }
+        String mail = authorizationService.getCurrentUserEmail();
         User user = userRepository.findByEmail(mail)
                 .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
         if (!applicationRepository.existsByIdApplication(dto.getApplicationId())) {

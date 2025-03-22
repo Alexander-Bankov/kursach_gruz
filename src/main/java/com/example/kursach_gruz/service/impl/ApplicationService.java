@@ -9,6 +9,7 @@ import com.example.kursach_gruz.model.entity.User;
 import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import com.example.kursach_gruz.model.repository.ApplicationRepository;
 import com.example.kursach_gruz.model.repository.UserRepository;
+import com.example.kursach_gruz.service.userService.AuthorizationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
@@ -21,23 +22,22 @@ public class ApplicationService /*implements BaseService<ApplicationDTO, Long>*/
     private final UserRepository userRepository;
     private final ApplicationToShowApplicationDTOConverter applicationToShowApplicationDTOConverter;
     private final ApplicationDTOToApplicationConverter applicationDTOToApplicationConverter;
+    private final AuthorizationService authorizationService;
 
     public ApplicationService(ApplicationRepository applicationRepository, UserRepository userRepository,
                               ApplicationToShowApplicationDTOConverter applicationToShowApplicationDTOConverter,
-                              ApplicationDTOToApplicationConverter applicationDTOToApplicationConverter) {
+                              ApplicationDTOToApplicationConverter applicationDTOToApplicationConverter,
+                              AuthorizationService authorizationService) {
         this.applicationRepository = applicationRepository;
         this.userRepository = userRepository;
         this.applicationToShowApplicationDTOConverter = applicationToShowApplicationDTOConverter;
         this.applicationDTOToApplicationConverter = applicationDTOToApplicationConverter;
+        this.authorizationService = authorizationService;
     }
 
     //@Override
     public ShowApplicationDTO create(ApplicationDTO dto, HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // Получаем текущую сессию
-        String mail = session != null ? (String) session.getAttribute("userEmail") : null; // Извлекаем email из сессии
-        if (mail == null) {
-            throw new IllegalStateException("Пользователь не авторизован");
-        }
+        String mail = authorizationService.getCurrentUserEmail();
 
         // Находим пользователя по email
         User user = userRepository.findByEmail(mail)

@@ -6,6 +6,7 @@ import com.example.kursach_gruz.model.dto.OrderDTO;
 import com.example.kursach_gruz.model.dto.showdto.OrderShowDTO;
 import com.example.kursach_gruz.model.entity.Order;
 import com.example.kursach_gruz.model.repository.OrderRepository;
+import com.example.kursach_gruz.service.userService.AuthorizationService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderDTOToOrderConverter orderDTOToOrderConverter;
     private final OrderToOrderShowDTOConverter orderToOrderShowDTOConverter;
+    private final AuthorizationService authorizationService;
 
     public OrderService(OrderRepository orderRepository,
                         OrderDTOToOrderConverter orderDTOToOrderConverter,
-                        OrderToOrderShowDTOConverter orderToOrderShowDTOConverter) {
+                        OrderToOrderShowDTOConverter orderToOrderShowDTOConverter,
+                        AuthorizationService authorizationService) {
         this.orderRepository = orderRepository;
         this.orderDTOToOrderConverter = orderDTOToOrderConverter;
         this.orderToOrderShowDTOConverter = orderToOrderShowDTOConverter;
+        this.authorizationService = authorizationService;
     }
 
     public OrderShowDTO createOrder(OrderDTO orderDTO) {

@@ -1,26 +1,32 @@
 package com.example.kursach_gruz.controller;
 
+import com.example.kursach_gruz.model.dto.showdto.UserShowDTO;
 import com.example.kursach_gruz.model.entity.Invoice;
 import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import com.example.kursach_gruz.model.enums.InvoiceStatus;
 import com.example.kursach_gruz.service.impl.AdminService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/admin")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
     private final AdminService adminService;
 
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
+    }
+
+    @GetMapping("/get-personal-info")
+    public ResponseEntity<UserShowDTO> getPersonalAdminInfo(HttpServletRequest request) {
+        UserShowDTO userShowDTO = adminService.getPersonalAdminInfo(request); // Получаем DTO
+        return ResponseEntity.ok(userShowDTO); // Оборачиваем его в ResponseEntity
     }
 
     @PutMapping("/change-status-application/{id}/{status}")
