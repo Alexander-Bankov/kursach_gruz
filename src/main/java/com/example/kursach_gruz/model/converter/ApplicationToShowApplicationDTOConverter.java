@@ -14,6 +14,7 @@ public class ApplicationToShowApplicationDTOConverter implements EntityToDTOConv
         }
 
         ShowApplicationDTO dto = new ShowApplicationDTO();
+        dto.setId(application.getIdApplication());
         dto.setCreateDate(application.getCreateDate());
         dto.setDesiredDepartureDate(application.getDesiredDepartureDate());
         dto.setDesiredDateOfReceipt(application.getDesiredDateOfReceipt());

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShowApplicationDTO implements BaseDTO {
+    private Long id;
 
     private LocalDateTime createDate;
 

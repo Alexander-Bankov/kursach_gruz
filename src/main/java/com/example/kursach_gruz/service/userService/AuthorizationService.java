@@ -54,6 +54,7 @@ public class AuthorizationService {
             String role = optionalRole.orElse("UNKNOWN");
             response.put("accessToken", accessToken);
             response.put("role", role);
+            System.out.println(accessToken);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "Неверные учетные данные"));

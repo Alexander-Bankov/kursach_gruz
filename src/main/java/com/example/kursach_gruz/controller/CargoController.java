@@ -48,14 +48,14 @@ public class CargoController {
         return new ResponseEntity<>(cargoDTOList, HttpStatus.OK);
     }
 
-//    // Эндпоинт для получения груза по идентификатору заявки и его идентификатору груза
-//    @GetMapping("/application/{applicationId}/cargo/{cargoId}")
-//    public ResponseEntity<CargoDTO> getCargoByApplicationAndCargoId(
-//            @PathVariable("applicationId") Long applicationId,
-//            @PathVariable("cargoId") Long cargoId) {
-//        CargoDTO cargoDTO = cargoService.getCargoByApplicationAndCargoId(applicationId, cargoId);
-//        return new ResponseEntity<>(cargoDTO, HttpStatus.OK);
-//    }
+    // Эндпоинт для получения груза по идентификатору заявки и его идентификатору груза
+    @GetMapping("/application/{applicationId}/cargo/{cargoId}")
+    public ResponseEntity<CargoShowDTO> getCargoByApplicationAndCargoId(
+            @PathVariable("applicationId") Long applicationId,
+            @PathVariable("cargoId") Long cargoId) {
+        CargoShowDTO cargoDTO = cargoService.getCargoByApplicationAndCargoId(applicationId, cargoId);
+        return new ResponseEntity<>(cargoDTO, HttpStatus.OK);
+    }
 
     // Эндпоинт для удаления груза по его идентификатору
     @DeleteMapping("/{id}")

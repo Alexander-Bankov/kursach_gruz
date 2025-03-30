@@ -92,13 +92,13 @@ public class CargoService  {
         return cargoRepository.findCargoShowByApplicationId(applicationId);
     }
 
-    // Поиск груза по идентификатору заявки и его идентификатору груза
-//    public CargoDTO getCargoByApplicationAndCargoId(Long applicationId, Long cargoId) {
-//        if (!relationshipRepository.existsByApplicationIdAndCargoId(applicationId, cargoId)) {
-//            throw new RuntimeException("Груз с таким ID не найден для данной заявки");
-//        }
-//        return getCargoById(cargoId);
-//    }
+     //Поиск груза по идентификатору заявки и его идентификатору груза
+    public CargoShowDTO getCargoByApplicationAndCargoId(Long applicationId, Long cargoId) {
+        if (!relationshipRepository.existsByApplicationIdAndCargoId(applicationId, cargoId)) {
+            throw new RuntimeException("Груз с таким ID не найден для данной заявки");
+        }
+        return getCargoById(cargoId);
+    }
 
 
 
