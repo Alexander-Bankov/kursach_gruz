@@ -1,5 +1,6 @@
 package com.example.kursach_gruz.controller;
 
+import com.example.kursach_gruz.config.TokenBlackList;
 import com.example.kursach_gruz.model.dto.JwtAuthenticationResponse;
 import com.example.kursach_gruz.model.dto.RegistrationDTO;
 import com.example.kursach_gruz.model.dto.AuthorizationDTO;
@@ -22,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/gruz")
 public class RegistrationController {
+    @Autowired
+    private TokenBlackList tokenBlackList;
 
 
     private final UserRepository userRepository;
@@ -53,24 +56,23 @@ public class RegistrationController {
 
 
 
-    @GetMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request) {
-        try{
-            HttpSession session = request.getSession(false); // Получаем текущую сессию
-            String mail = session != null ? (String) session.getAttribute("userEmail") : null; // Извлекаем email из сессии
-            if (mail == null) {
-                throw new IllegalStateException("Пользователь не авторизован");
-            }
-            if (session != null) {
-                // Удаляем предыдущую сессию
-                session.invalidate();
-            }
-            return ResponseEntity.ok().body("Logout session");
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            String jwt = request.getHeader("Authorization").substring(7); // Извлечение JWT из заголовка
 
-        }
-        catch (Exception e) {
+            if (jwt != null) {
+                tokenBlackList.blacklistToken(jwt); // Добавляем токен в черный список
+            }
+
+            if (session != null) {
+                session.invalidate(); // Удаляем сессию
+            }
+            return ResponseEntity.ok(Map.of("message", "Logout success")); // Возвращаем ответ в формате JSON
+        } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("error");
+            return ResponseEntity.badRequest().body(Map.of("error", "Error during logout"));
         }
     }
 }
