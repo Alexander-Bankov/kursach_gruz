@@ -53,19 +53,20 @@ public class AdminService {
                 .orElseThrow(() -> new RuntimeException("Application not found"));
         application.setStatus(status);
         applicationRepository.save(application);
-        if (status == ApplicationStatus.ACCEPT && invoiceRepository.findInvoiceByApplicationId(idApplication).isEmpty()){
-            Invoice invoice = new Invoice();
-            invoice.setDateCreate(LocalDateTime.now());
-            invoice.setDescriptionInvoice(application.getDescription());
-            invoice.setStatus(InvoiceStatus.CREATE);
-            invoice.setPointOfReceipt(application.getDesiredPointOfReceipt());
-            invoice.setPointOfDeparture(application.getDesiredPointOfDeparture());
-            invoice.setApplication(application);
-            invoiceRepository.save(invoice);
-            application.setStatus(ApplicationStatus.INVOICE_CREATED);
-            applicationRepository.save(application);
-        }
-        else {throw new RuntimeException("На данную заявку уже есть накладная");}
+//        if (status == ApplicationStatus.ACCEPT && invoiceRepository.findInvoiceByApplicationId(idApplication).isEmpty()){
+//            Invoice invoice = new Invoice();
+//            invoice.setDateCreate(LocalDateTime.now());
+//            invoice.setDescriptionInvoice(application.getDescription());
+//            invoice.setStatus(InvoiceStatus.CREATE);
+//            invoice.setPointOfReceipt(application.getDesiredPointOfReceipt());
+//            invoice.setPointOfDeparture(application.getDesiredPointOfDeparture());
+//            invoice.setApplication(application);
+//            invoiceRepository.save(invoice);
+//            application.setStatus(ApplicationStatus.INVOICE_CREATED);
+//            applicationRepository.save(application);
+//        }
+//        else {throw new RuntimeException("На данную заявку уже есть накладная");
+//        }
     }
 
     @Transactional
@@ -106,5 +107,22 @@ public class AdminService {
         invoice.setStatus(InvoiceStatus.SEND_TO_ORDER);
         invoice.setUserConfirmed(user.getUserId());
         invoiceRepository.save(invoice);
+    }
+
+    public void createInvoice(Long applicationId){
+        applicationRepository.findUserIdByApplicationId(applicationId);
+        Application application = applicationRepository.findById(applicationId)
+                .orElse(new Application());
+        Invoice invoice = new Invoice();
+        invoice.setDateCreate(LocalDateTime.now());
+        invoice.setDescriptionInvoice(application.getDescription());
+        invoice.setPointOfReceipt(application.getDesiredPointOfReceipt());
+        invoice.setPointOfDeparture(application.getDesiredPointOfDeparture());
+        invoice.setApplication(application);
+        invoice.setStatus(InvoiceStatus.CREATE);
+        invoiceRepository.save(invoice);
+        application.setStatus(ApplicationStatus.INVOICE_CREATED);
+        applicationRepository.save(application);
+
     }
 }

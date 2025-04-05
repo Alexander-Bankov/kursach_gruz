@@ -3,10 +3,15 @@ package com.example.kursach_gruz.model.converter;
 import com.example.kursach_gruz.model.dto.ApplicationDTO;
 import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.User;
+import com.example.kursach_gruz.model.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ApplicationDTOToApplicationConverter implements DTOToEntityConverter<ApplicationDTO, Application,Long>{
+    private final UserRepository userRepository;
+
     @Override
     public Application convert(ApplicationDTO dto, Long id) {
         if (dto == null) {
@@ -20,7 +25,9 @@ public class ApplicationDTOToApplicationConverter implements DTOToEntityConverte
         application.setDesiredPointOfDeparture(dto.getDesiredPointOfDeparture());
         application.setDesiredPointOfReceipt(dto.getDesiredPointOfReceipt());
         application.setDescription(dto.getDescription());
-        application.setUser(new User(id));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+        application.setUser(user);
 
         // Мы можем установить объект User позже, когда пользователь будет загружен из базы данных
         // Для этого можно использовать UserService или аналогичный компонент

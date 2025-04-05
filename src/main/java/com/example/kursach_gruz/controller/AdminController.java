@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
     private final AdminService adminService;
@@ -27,6 +26,12 @@ public class AdminController {
     public ResponseEntity<UserShowDTO> getPersonalAdminInfo(HttpServletRequest request) {
         UserShowDTO userShowDTO = adminService.getPersonalAdminInfo(request); // Получаем DTO
         return ResponseEntity.ok(userShowDTO); // Оборачиваем его в ResponseEntity
+    }
+
+    @PostMapping("create-invoice/{applicationid}")
+    public ResponseEntity<Void> createInvoice(@PathVariable Long applicationid) {
+        adminService.createInvoice(applicationid); // Получаем DTO
+        return ResponseEntity.ok().build(); // Оборачиваем его в ResponseEntity
     }
 
     @PutMapping("/change-status-application/{id}/{status}")

@@ -21,7 +21,7 @@ public class ApplicationToShowApplicationDTOConverter implements EntityToDTOConv
         dto.setDesiredPointOfDeparture(application.getDesiredPointOfDeparture());
         dto.setDesiredPointOfReceipt(application.getDesiredPointOfReceipt());
         dto.setDescription(application.getDescription());
-        dto.setStatus(application.getStatus()); // Установка статуса
+        dto.setApplicationStatus(application.getStatus().toString()); // Установка статуса
 
         return dto;
     }

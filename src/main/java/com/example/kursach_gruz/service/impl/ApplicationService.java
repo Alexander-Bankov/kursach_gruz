@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,7 +48,7 @@ public class ApplicationService /*implements BaseService<ApplicationDTO, Long>*/
         Application application = applicationDTOToApplicationConverter.convert(dto, user.getUserId());
         application.setUser(user); // Устанавливаем пользователя
         application.setStatus(ApplicationStatus.CREATE); // Устанавливаем статус на CREATE
-
+        application.setCreateDate(LocalDateTime.now());
         // Сохраняем заявку в базе
         Application savedApplication = applicationRepository.save(application);
         return applicationToShowApplicationDTOConverter.convert(savedApplication); // Возвращаем DTO
@@ -88,5 +89,36 @@ public class ApplicationService /*implements BaseService<ApplicationDTO, Long>*/
                 .map(applicationToShowApplicationDTOConverter::convert)
                 .toList();
     }
+
+    public List<ShowApplicationDTO> findAllByUserId() {
+        String mail = authorizationService.getCurrentUserEmail();
+        User user = userRepository.findByEmail(mail)
+                    .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
+        return applicationRepository.findAllByUser(user)
+                .stream()
+                .map(applicationToShowApplicationDTOConverter::convert)
+                .toList();
+    }
+
+//    public List<ShowApplicationDTO> findAllByUserId() {
+//        try {
+//            String mail = authorizationService.getCurrentUserEmail();
+//
+//            // Находим пользователя по email
+//            User user = userRepository.findByEmail(mail)
+//                    .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
+//            List<ShowApplicationDTO> a = applicationRepository.findAllByUserId(user.getUserId());
+//            return applicationRepository.findAllByUserId(user.getUserId());
+//        } catch (Exception e) {
+//            // Логируем ошибку (можно использовать любой механизм логирования, например, SLF4J)
+//            System.err.println("Произошла ошибка при получении заявок пользователя: " + e.getMessage());
+//
+//            // В зависимости от вашей логики, вы можете либо пробросить исключение далее, либо вернуть пустой список, например:
+//            // return Collections.emptyList();
+//
+//            // Если хотите пробросить исключение
+//            throw new RuntimeException("Ошибка при получении заявок пользователя", e);
+//        }
+//    }
 
 }
