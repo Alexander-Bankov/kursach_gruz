@@ -10,8 +10,6 @@ public class InvoiceDTO implements BaseDTO{
 
     private String descriptionInvoice;
 
-    private String document;
-
     private BigDecimal cost;
 
     private String pointOfDeparture;

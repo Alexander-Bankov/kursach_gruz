@@ -12,9 +12,9 @@ public class InvoiceConvertToInvoiceShowDTO implements EntityToDTOConverter<Invo
     @Override
     public InvoiceShowDTO convert(Invoice invoice) {
         InvoiceShowDTO dto = new InvoiceShowDTO();
+        dto.setId(invoice.getIdInvoice());
         dto.setDateCreate(invoice.getDateCreate());
         dto.setDescriptionInvoice(invoice.getDescriptionInvoice());
-        dto.setDocument(invoice.getDocument());
         dto.setStatus(invoice.getStatus());
         dto.setUserConfirmed(invoice.getUserConfirmed());
         dto.setCost(invoice.getCost());

@@ -33,7 +33,6 @@ public class InvoiceService {
         Invoice invoice = new Invoice();
         invoice.setDateCreate(LocalDateTime.now());
         invoice.setDescriptionInvoice(invoiceDTO.getDescriptionInvoice());
-        invoice.setDocument(invoiceDTO.getDocument());
         invoice.setCost(invoiceDTO.getCost());
         invoice.setPointOfDeparture(invoiceDTO.getPointOfDeparture());
         invoice.setPointOfReceipt(invoiceDTO.getPointOfReceipt());
@@ -60,7 +59,6 @@ public class InvoiceService {
         if (existingInvoiceOpt.isPresent()) {
             Invoice existingInvoice = existingInvoiceOpt.get();
             existingInvoice.setDescriptionInvoice(invoiceDTO.getDescriptionInvoice());
-            existingInvoice.setDocument(invoiceDTO.getDocument());
             existingInvoice.setCost(invoiceDTO.getCost());
             existingInvoice.setPointOfDeparture(invoiceDTO.getPointOfDeparture());
             existingInvoice.setPointOfReceipt(invoiceDTO.getPointOfReceipt());

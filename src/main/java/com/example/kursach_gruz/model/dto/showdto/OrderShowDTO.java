@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class OrderShowDTO implements BaseDTO {
+    private Long id;
 
     private LocalDateTime dateStartExecution;
 

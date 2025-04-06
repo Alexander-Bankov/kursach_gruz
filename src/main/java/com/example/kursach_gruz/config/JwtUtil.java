@@ -15,7 +15,7 @@ import java.util.Map;
 public class JwtUtil {
 
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Генерация безопасного ключа
-    private final long EXPIRATION_TIME = 3600000; // 1 час в миллисекундах
+    private final long EXPIRATION_TIME = 360000000; // 1 час в миллисекундах
 
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();

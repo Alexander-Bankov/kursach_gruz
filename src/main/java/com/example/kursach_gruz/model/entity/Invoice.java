@@ -29,9 +29,6 @@ public class Invoice implements BaseEntity{
     @Column(name = "description_invoice")
     private String descriptionInvoice;
 
-    @Column(name = "document")
-    private String document;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private InvoiceStatus status;

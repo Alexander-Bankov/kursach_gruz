@@ -6,6 +6,7 @@ import com.example.kursach_gruz.model.entity.Invoice;
 import com.example.kursach_gruz.model.entity.User;
 import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import com.example.kursach_gruz.model.enums.InvoiceStatus;
+import com.example.kursach_gruz.model.enums.Role;
 import com.example.kursach_gruz.model.repository.ApplicationRepository;
 import com.example.kursach_gruz.model.repository.InvoiceRepository;
 import com.example.kursach_gruz.model.repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AdminService {
@@ -39,12 +41,42 @@ public class AdminService {
         this.authorizationService = authorizationService;
     }
 
-    public UserShowDTO getPersonalAdminInfo(HttpServletRequest req) {
+    public UserShowDTO getPersonalAdminInfo() {
         String email = authorizationService.getCurrentUserEmail();
 
         // Находим пользователя по email и возвращаем DTO
         return userRepository.findUserShowDTOByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
+    }
+
+    public List<UserShowDTO> getPersonalUsersInfo() {
+        String email = authorizationService.getCurrentUserEmail();
+
+        // Находим пользователя по email и возвращаем DTO
+        return userRepository.findUser();
+    }
+
+    public List<UserShowDTO> getPersonalUsersInfoByEmail(String email) {
+        try{
+
+            // Находим пользователя по email и возвращаем DTO
+            return userRepository.findUsersByEmail(email);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Пользователи не найдены");
+        }
+    }
+
+    public void changeRoleUser(String email){
+        try{
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+            user.setRole(Role.ADMINISTRATOR);
+            userRepository.save(user);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Не получилось изменить роль пользователя");
+        }
     }
 
     @Transactional

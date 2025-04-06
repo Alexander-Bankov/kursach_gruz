@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @Data
 public class InvoiceShowDTO implements BaseDTO {
 
+    private Long id;
+
     private LocalDateTime dateCreate;
 
     private String descriptionInvoice;
-
-    private String document;
 
     private InvoiceStatus status;
 
