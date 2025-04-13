@@ -1,5 +1,6 @@
 package com.example.kursach_gruz.service.impl;
 
+import com.example.kursach_gruz.model.dto.showdto.CargoShowDTO;
 import com.example.kursach_gruz.model.dto.showdto.UserShowDTO;
 import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.Invoice;
@@ -8,6 +9,7 @@ import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import com.example.kursach_gruz.model.enums.InvoiceStatus;
 import com.example.kursach_gruz.model.enums.Role;
 import com.example.kursach_gruz.model.repository.ApplicationRepository;
+import com.example.kursach_gruz.model.repository.CargoRepository;
 import com.example.kursach_gruz.model.repository.InvoiceRepository;
 import com.example.kursach_gruz.model.repository.UserRepository;
 import com.example.kursach_gruz.service.userService.AuthorizationService;
@@ -27,18 +29,25 @@ public class AdminService {
 
     private final InvoiceRepository invoiceRepository;
 
+    private final CargoService cargoService;
+
     private final UserRepository userRepository;
 
     private final AuthorizationService authorizationService;
 
+    private final CargoRepository cargoRepository;
+
     public AdminService(ApplicationRepository applicationRepository,
                         InvoiceRepository invoiceRepository,
                         UserRepository userRepository,
-                        AuthorizationService authorizationService) {
+                        AuthorizationService authorizationService,
+                        CargoService cargoService, CargoRepository cargoRepository) {
         this.applicationRepository = applicationRepository;
         this.invoiceRepository = invoiceRepository;
         this.userRepository = userRepository;
         this.authorizationService = authorizationService;
+        this.cargoService = cargoService;
+        this.cargoRepository = cargoRepository;
     }
 
     public UserShowDTO getPersonalAdminInfo() {
@@ -103,13 +112,7 @@ public class AdminService {
 
     @Transactional
     public void confirmedInvoice(Long idApplication,HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false); // Получаем текущую сессию
-        String mail = session != null ? (String) session.getAttribute("userEmail") : null; // Извлекаем email из сессии
-        if (mail == null) {
-            throw new IllegalStateException("Пользователь не авторизован");
-        }
-
+        String mail = authorizationService.getCurrentUserEmail();
         // Находим пользователя по email
         User user = userRepository.findByEmail(mail)
                 .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
@@ -122,29 +125,53 @@ public class AdminService {
     }
 
     @Transactional
-    public void changeCostInvoice(Long idApplication,BigDecimal cost, HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false); // Получаем текущую сессию
-        String mail = session != null ? (String) session.getAttribute("userEmail") : null; // Извлекаем email из сессии
-        if (mail == null) {
-            throw new IllegalStateException("Пользователь не авторизован");
-        }
+    public void changeCostInvoice(Long idApplication) {
+        String mail = authorizationService.getCurrentUserEmail();
 
         // Находим пользователя по email
         User user = userRepository.findByEmail(mail)
                 .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
 
+        Application application = applicationRepository.findById(idApplication)
+                .orElseThrow(() -> new IllegalStateException("Заявка не найдена"));
+
+        List<CargoShowDTO> cargoShowDTOList = cargoRepository.findCargoShowByApplicationId(idApplication);
+
+        Double distance = application.getDistance();
+        BigDecimal cost = BigDecimal.valueOf(0.00);
+
+        // Рассчитываем стоимость грузов
+        for (CargoShowDTO cargo : cargoShowDTOList) {
+            // Для каждого груза добавляем стоимость за его вес
+            cost = cost.add(BigDecimal.valueOf(cargo.getWeight() * 50.00));
+        }
+
+        // Добавляем стоимость за расстояние
+        cost = cost.add(BigDecimal.valueOf(distance * 35.00));
+
+        // Получаем или создаем счет
         Invoice invoice = invoiceRepository.findInvoiceByApplicationId(idApplication)
                 .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+        // Устанавливаем статус и другие параметры счета
         invoice.setStatus(InvoiceStatus.SEND_TO_ORDER);
         invoice.setUserConfirmed(user.getUserId());
+        invoice.setCost(cost); // Установите общую стоимость
         invoiceRepository.save(invoice);
     }
 
     public void createInvoice(Long applicationId){
+        // Получаем список грузов по ID заявки
+        List<CargoShowDTO> cargoList = cargoService.getAllCargoByApplicationId(applicationId);
+
+        // Проверяем, есть ли грузы
+        if (cargoList.isEmpty()) {
+            throw new RuntimeException("Невозможно создать накладную, так как нет грузов по данной заявке");
+        }
         applicationRepository.findUserIdByApplicationId(applicationId);
         Application application = applicationRepository.findById(applicationId)
                 .orElse(new Application());
+
         Invoice invoice = new Invoice();
         invoice.setDateCreate(LocalDateTime.now());
         invoice.setDescriptionInvoice(application.getDescription());

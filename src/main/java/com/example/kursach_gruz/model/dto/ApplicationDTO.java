@@ -1,10 +1,6 @@
 package com.example.kursach_gruz.model.dto;
 
 
-import com.example.kursach_gruz.model.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -24,4 +20,5 @@ public class ApplicationDTO implements BaseDTO {
 
     private String description;
 
+    private Double distance;
 }

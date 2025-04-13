@@ -25,6 +25,7 @@ public class ApplicationDTOToApplicationConverter implements DTOToEntityConverte
         application.setDesiredPointOfDeparture(dto.getDesiredPointOfDeparture());
         application.setDesiredPointOfReceipt(dto.getDesiredPointOfReceipt());
         application.setDescription(dto.getDescription());
+        application.setDistance(dto.getDistance());
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         application.setUser(user);

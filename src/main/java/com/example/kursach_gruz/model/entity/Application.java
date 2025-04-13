@@ -39,6 +39,9 @@ public class Application implements BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "distance")
+    private Double distance;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private ApplicationStatus status;

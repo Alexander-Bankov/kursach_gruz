@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class InvoiceShowDTO implements BaseDTO {
 
-    private Long id;
+    private Long invoiceId;
 
     private LocalDateTime dateCreate;
 
@@ -20,7 +20,7 @@ public class InvoiceShowDTO implements BaseDTO {
 
     private InvoiceStatus status;
 
-    private Long userConfirmed;
+    private String userConfirmed;
 
     private BigDecimal cost;
 
@@ -29,4 +29,6 @@ public class InvoiceShowDTO implements BaseDTO {
     private String pointOfReceipt;
 
     private Application application;
+
+    private Long applicationId;
 }

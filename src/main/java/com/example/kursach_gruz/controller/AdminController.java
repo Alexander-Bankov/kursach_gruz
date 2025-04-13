@@ -49,9 +49,13 @@ public class AdminController {
     }
 
     @PostMapping("create-invoice/{applicationid}")
-    public ResponseEntity<Void> createInvoice(@PathVariable Long applicationid) {
-        adminService.createInvoice(applicationid); // Получаем DTO
-        return ResponseEntity.ok().build(); // Оборачиваем его в ResponseEntity
+    public ResponseEntity<String> createInvoice(@PathVariable Long applicationid) {
+        try {
+            adminService.createInvoice(applicationid);
+            return ResponseEntity.ok("Накладная успешно создана."); // Можно вернуть успешное сообщение
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // Возвращаем сообщение из исключения
+        }
     }
 
     @PutMapping("/change-status-application/{id}/{status}")
@@ -66,9 +70,9 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-cost-invoice/{id}/{cost}")
-    public ResponseEntity<Void> updateCostInvoice(@PathVariable Long id, @PathVariable BigDecimal cost, HttpServletRequest request) {
-        adminService.changeCostInvoice(id, cost, request);
+    @PutMapping("/change-cost-invoice/{id}")
+    public ResponseEntity<Void> updateCostInvoice(@PathVariable Long id) {
+        adminService.changeCostInvoice(id);
         return ResponseEntity.ok().build();
     }
 }

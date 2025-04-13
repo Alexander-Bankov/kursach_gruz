@@ -29,4 +29,6 @@ public class ShowApplicationDTO implements BaseDTO {
     private String description;
 
     private  String applicationStatus;
+
+    private Double distance;
 }

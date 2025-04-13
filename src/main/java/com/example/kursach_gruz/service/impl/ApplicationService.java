@@ -65,6 +65,7 @@ public class ApplicationService /*implements BaseService<ApplicationDTO, Long>*/
         application.setDesiredPointOfDeparture(dto.getDesiredPointOfDeparture());
         application.setDesiredPointOfReceipt(dto.getDesiredPointOfReceipt());
         application.setDescription(dto.getDescription());
+        application.setDistance(dto.getDistance());
 
         Application updatedApplication = applicationRepository.save(application);
         return applicationToShowApplicationDTOConverter.convert(updatedApplication);
