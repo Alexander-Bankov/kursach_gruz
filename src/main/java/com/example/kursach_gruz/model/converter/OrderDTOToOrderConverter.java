@@ -15,6 +15,7 @@ public class OrderDTOToOrderConverter implements DTOToEntityConverter<OrderDTO, 
         order.setDateStartExecution(dto.getDateStartExecution());
         order.setEndDateExecution(dto.getEndDateExecution());
         order.setIdApplication(dto.getIdApplication());
+        order.setIdInvoice(dto.getIdInvoice());
         order.setStatus(dto.getStatus());
         return order;
     }

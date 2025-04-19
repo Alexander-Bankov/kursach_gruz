@@ -18,5 +18,7 @@ public class OrderShowDTO implements BaseDTO {
 
     private RecordStatus status;
 
+    private Long invoiceId;
+
     private Long idApplication;
 }

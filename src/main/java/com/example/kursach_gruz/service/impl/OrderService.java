@@ -44,6 +44,7 @@ public class OrderService {
         order.setDateStartExecution(orderDTO.getDateStartExecution());
         order.setEndDateExecution(orderDTO.getEndDateExecution());
         order.setIdApplication(orderDTO.getIdApplication());
+        order.setIdInvoice(orderDTO.getIdInvoice());
         order.setStatus(orderDTO.getStatus());
         order = orderRepository.save(order);
         return orderToOrderShowDTOConverter.convert(order);

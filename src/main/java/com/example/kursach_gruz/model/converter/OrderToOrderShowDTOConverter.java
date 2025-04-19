@@ -12,10 +12,12 @@ public class OrderToOrderShowDTOConverter implements EntityToDTOConverter<Order,
     @Override
     public OrderShowDTO convert(Order order) {
         OrderShowDTO dto = new OrderShowDTO();
+        dto.setId(order.getIdOrder());
         dto.setDateStartExecution(order.getDateStartExecution());
         dto.setEndDateExecution(order.getEndDateExecution());
         dto.setStatus(order.getStatus());
         dto.setIdApplication(order.getIdApplication());
+        dto.setInvoiceId(order.getIdInvoice());
         return dto;
     }
 }

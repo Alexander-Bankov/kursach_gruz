@@ -4,14 +4,13 @@ import com.example.kursach_gruz.model.dto.showdto.CargoShowDTO;
 import com.example.kursach_gruz.model.dto.showdto.UserShowDTO;
 import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.Invoice;
+import com.example.kursach_gruz.model.entity.Order;
 import com.example.kursach_gruz.model.entity.User;
 import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import com.example.kursach_gruz.model.enums.InvoiceStatus;
+import com.example.kursach_gruz.model.enums.RecordStatus;
 import com.example.kursach_gruz.model.enums.Role;
-import com.example.kursach_gruz.model.repository.ApplicationRepository;
-import com.example.kursach_gruz.model.repository.CargoRepository;
-import com.example.kursach_gruz.model.repository.InvoiceRepository;
-import com.example.kursach_gruz.model.repository.UserRepository;
+import com.example.kursach_gruz.model.repository.*;
 import com.example.kursach_gruz.service.userService.AuthorizationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -37,17 +36,20 @@ public class AdminService {
 
     private final CargoRepository cargoRepository;
 
+    private final OrderRepository orderRepository;
+
     public AdminService(ApplicationRepository applicationRepository,
                         InvoiceRepository invoiceRepository,
                         UserRepository userRepository,
                         AuthorizationService authorizationService,
-                        CargoService cargoService, CargoRepository cargoRepository) {
+                        CargoService cargoService, CargoRepository cargoRepository,OrderRepository orderRepository) {
         this.applicationRepository = applicationRepository;
         this.invoiceRepository = invoiceRepository;
         this.userRepository = userRepository;
         this.authorizationService = authorizationService;
         this.cargoService = cargoService;
         this.cargoRepository = cargoRepository;
+        this.orderRepository = orderRepository;
     }
 
     public UserShowDTO getPersonalAdminInfo() {
@@ -86,6 +88,22 @@ public class AdminService {
         catch (Exception e){
             throw new RuntimeException("Не получилось изменить роль пользователя");
         }
+    }
+
+    @Transactional
+    public void updateStatusOrder(Long idOrder, RecordStatus status) {
+        Order order = orderRepository.findById(idOrder)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+
+        if(status == RecordStatus.DELIVERED){
+            order.setStatus(RecordStatus.DELIVERED);
+            order.setEndDateExecution(LocalDateTime.now());
+        }
+        else {
+            order.setStatus(status);
+        }
+        orderRepository.save(order);
+
     }
 
     @Transactional
@@ -155,7 +173,6 @@ public class AdminService {
 
         // Устанавливаем статус и другие параметры счета
         invoice.setStatus(InvoiceStatus.SEND_TO_ORDER);
-        invoice.setUserConfirmed(user.getUserId());
         invoice.setCost(cost); // Установите общую стоимость
         invoiceRepository.save(invoice);
     }

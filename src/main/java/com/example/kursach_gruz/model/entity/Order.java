@@ -33,6 +33,9 @@ public class Order implements BaseEntity{
     @Column(name ="status")
     private RecordStatus status;
 
+    @Column(name = "id_invoice")
+    private Long idInvoice;
+
     @Column(name = "id_application")
     private Long idApplication;
 

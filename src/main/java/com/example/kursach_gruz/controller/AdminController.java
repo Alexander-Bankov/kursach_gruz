@@ -4,6 +4,7 @@ import com.example.kursach_gruz.model.dto.showdto.UserShowDTO;
 import com.example.kursach_gruz.model.entity.Invoice;
 import com.example.kursach_gruz.model.enums.ApplicationStatus;
 import com.example.kursach_gruz.model.enums.InvoiceStatus;
+import com.example.kursach_gruz.model.enums.RecordStatus;
 import com.example.kursach_gruz.model.enums.Role;
 import com.example.kursach_gruz.service.impl.AdminService;
 import jakarta.annotation.security.PermitAll;
@@ -56,6 +57,12 @@ public class AdminController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage()); // Возвращаем сообщение из исключения
         }
+    }
+
+    @PutMapping("/change-status-order/{id}/{status}")
+    public ResponseEntity<Void> changeStatusOrder(@PathVariable Long id, @PathVariable RecordStatus status) {
+        adminService.updateStatusOrder(id, status);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/change-status-application/{id}/{status}")

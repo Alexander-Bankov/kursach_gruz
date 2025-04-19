@@ -16,5 +16,7 @@ public class OrderDTO implements BaseDTO{
 
     private Long idApplication;
 
+    private Long idInvoice;
+
     private RecordStatus status;
 }
