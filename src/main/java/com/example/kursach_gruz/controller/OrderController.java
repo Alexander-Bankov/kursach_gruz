@@ -51,7 +51,7 @@ public class OrderController {
 
     @GetMapping("/user")
     public ResponseEntity<List<OrderShowDTO>> getAllOrdersByUser() {
-        List<OrderShowDTO> orders = orderService.getAllOrders();
+        List<OrderShowDTO> orders = orderService.getAllOrdersForUser();
         return ResponseEntity.ok(orders);
     }
 

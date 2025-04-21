@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -88,6 +89,7 @@ public class ApplicationService /*implements BaseService<ApplicationDTO, Long>*/
         return applicationRepository.findAll()
                 .stream()
                 .map(applicationToShowApplicationDTOConverter::convert)
+                .sorted(Comparator.comparing(ShowApplicationDTO::getId).reversed())
                 .toList();
     }
 
@@ -98,6 +100,7 @@ public class ApplicationService /*implements BaseService<ApplicationDTO, Long>*/
         return applicationRepository.findAllByUser(user)
                 .stream()
                 .map(applicationToShowApplicationDTOConverter::convert)
+                .sorted(Comparator.comparing(ShowApplicationDTO::getId).reversed())
                 .toList();
     }
 

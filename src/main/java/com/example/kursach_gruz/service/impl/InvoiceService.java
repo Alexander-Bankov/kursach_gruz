@@ -3,15 +3,20 @@ package com.example.kursach_gruz.service.impl;
 import com.example.kursach_gruz.model.converter.InvoiceConvertToInvoiceShowDTO;
 import com.example.kursach_gruz.model.dto.InvoiceDTO;
 import com.example.kursach_gruz.model.dto.showdto.InvoiceShowDTO;
+import com.example.kursach_gruz.model.dto.showdto.ShowApplicationDTO;
 import com.example.kursach_gruz.model.entity.Application;
 import com.example.kursach_gruz.model.entity.Invoice;
+import com.example.kursach_gruz.model.entity.User;
 import com.example.kursach_gruz.model.enums.InvoiceStatus;
 import com.example.kursach_gruz.model.repository.InvoiceRepository;
+import com.example.kursach_gruz.model.repository.UserRepository;
 import com.example.kursach_gruz.service.userService.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +25,16 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final InvoiceConvertToInvoiceShowDTO convertToInvoiceShowDTO;
     private final AuthorizationService authorizationService;
+    private final UserRepository userRepository;
 
     public InvoiceService(InvoiceRepository invoiceRepository,
                           InvoiceConvertToInvoiceShowDTO convertToInvoiceShowDTO,
-                          AuthorizationService authorizationService) {
+                          AuthorizationService authorizationService,
+                          UserRepository userRepository) {
         this.invoiceRepository = invoiceRepository;
         this.convertToInvoiceShowDTO = convertToInvoiceShowDTO;
         this.authorizationService = authorizationService;
+        this.userRepository = userRepository;
     }
 
     public InvoiceShowDTO createInvoice(InvoiceDTO invoiceDTO) {
@@ -45,7 +53,27 @@ public class InvoiceService {
 
     public List<InvoiceShowDTO> getAllInvoices() {
         List<Invoice> invoices = invoiceRepository.findAll();
-        return invoices.stream().map(convertToInvoiceShowDTO::convert).toList();
+        return invoices
+                .stream()
+                .map(convertToInvoiceShowDTO::convert)
+                .sorted(Comparator.comparing(InvoiceShowDTO::getInvoiceId).reversed())
+                .toList();
+    }
+
+    public List<InvoiceShowDTO> getAllInvoicesForUser() {
+        String mail = authorizationService.getCurrentUserEmail();
+        User user = userRepository.findByEmail(mail)
+                .orElseThrow(() -> new IllegalStateException("Пользователь с таким email не найден"));
+
+        // Получаем все накладные для текущего пользователя по его ID
+        List<Invoice> invoices = invoiceRepository.findInvoicesByUserId(user.getUserId())
+                .orElseGet(Collections::emptyList); // Если не найдено, возвращаем пустой список
+
+        return invoices
+                .stream()
+                .map(convertToInvoiceShowDTO::convert)
+                .sorted(Comparator.comparing(InvoiceShowDTO::getInvoiceId).reversed())
+                .toList();
     }
 
     public InvoiceShowDTO getInvoiceById(Long id) {

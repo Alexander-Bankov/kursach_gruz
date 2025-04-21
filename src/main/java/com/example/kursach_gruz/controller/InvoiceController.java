@@ -35,7 +35,7 @@ public class InvoiceController {
 
     @GetMapping("/user")
     public ResponseEntity<List<InvoiceShowDTO>> getAllInvoicesByUser() {
-        List<InvoiceShowDTO> invoices = invoiceService.getAllInvoices();
+        List<InvoiceShowDTO> invoices = invoiceService.getAllInvoicesForUser();
         return ResponseEntity.ok(invoices);
     }
 

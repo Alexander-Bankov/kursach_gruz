@@ -44,7 +44,13 @@ public class AdminController {
     }
 
     @PutMapping("/change-role")
-    public ResponseEntity<Void> getPersonalInfoUsers(String email) {
+    public ResponseEntity<Void>changeRoleToAdmin(String email) {
+        adminService.changeRoleAdmin(email); // Получаем DTO
+        return ResponseEntity.ok().build(); // Оборачиваем его в ResponseEntity
+    }
+
+    @PutMapping("/change-role-user")
+    public ResponseEntity<Void> changeRoleToUser(String email) {
         adminService.changeRoleUser(email); // Получаем DTO
         return ResponseEntity.ok().build(); // Оборачиваем его в ResponseEntity
     }

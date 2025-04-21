@@ -78,11 +78,23 @@ public class AdminService {
         }
     }
 
-    public void changeRoleUser(String email){
+    public void changeRoleAdmin(String email){
         try{
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
             user.setRole(Role.ADMINISTRATOR);
+            userRepository.save(user);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Не получилось изменить роль пользователя");
+        }
+    }
+
+    public void changeRoleUser(String email){
+        try{
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+            user.setRole(Role.USER);
             userRepository.save(user);
         }
         catch (Exception e){
@@ -137,7 +149,7 @@ public class AdminService {
 
         Invoice invoice = invoiceRepository.findInvoiceByApplicationId(idApplication)
                 .orElseThrow(() -> new RuntimeException("Invoice not found"));
-        invoice.setStatus(InvoiceStatus.SEND_TO_ORDER);
+        //invoice.setStatus(InvoiceStatus.SEND_TO_ORDER);
         invoice.setUserConfirmed(user.getUserId());
         invoiceRepository.save(invoice);
     }
